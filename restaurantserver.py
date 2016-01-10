@@ -92,6 +92,24 @@ class Handler(BaseHTTPRequestHandler):
 					output += "</html></body>"
 
 					self.wfile.write(output)
+
+				elif self.path.endswith('updated'):
+
+					fields = cgi.parse_multipart(self.rfile,pdict)
+					messagecontent = fields.get('name')
+					restaurant_id = self.path.split('/')[2]
+
+					restaurant = session.query(Restaurant).filter(Restaurant.id == restaurant_id).one()
+
+					restaurant.name = messagecontent[0]
+					session.add(restaurant)
+					session.commit()
+
+					output = '<html><head>'
+					output += '<meta http-equiv = "refresh" content = "0;url=/restaurants">'
+					output += '</head></html>'
+
+					self.wfile.write(output)
 		except:
 			pass
 
