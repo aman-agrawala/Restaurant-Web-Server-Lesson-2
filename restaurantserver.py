@@ -84,10 +84,9 @@ class Handler(BaseHTTPRequestHandler):
 		except IOError:
 			self.send_error(404, "File Not Found: %s" % self.path)
 
-
 	def do_POST(self):
 		try:
-			elf.send_response(301)
+			self.send_response(301)
 			self.end_headers()
 
 			ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
@@ -145,7 +144,6 @@ class Handler(BaseHTTPRequestHandler):
 					self.wfile.write(output)
 		except:
 			pass
-
 def main():
 	try:
 		port = 8080
