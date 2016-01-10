@@ -33,6 +33,21 @@ class Handler(BaseHTTPRequestHandler):
 				output += "</body></html>"
 				self.wfile.write(output) # send output back to client
 				return # exit if statement
+
+			elif self.path.endswith("/restaurants/new"):
+				self.send_response(200)
+				self.send_header('Content-type','text/html')
+				self.end_headers()
+
+				output = '<html><body>'
+				output += '''<form method = 'POST' enctype='multipart/form-data' action='/restaurants/create'>Name of Restaurant<input name = "message" type = "text"><input type = "submit" value="Submit"></form>'''
+
+				output += "</body></html>"
+
+				self.wfile.write(output)
+
+				return 
+
 		except IOError:
 			self.send_error(404, "File Not Found: %s" % self.path)
 
