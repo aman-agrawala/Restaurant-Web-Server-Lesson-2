@@ -128,6 +128,21 @@ class Handler(BaseHTTPRequestHandler):
 					output += '</head></html>'
 
 					self.wfile.write(output)
+
+				elif self.path.endswith('delete'):
+
+					restaurant_id = self.path.split('/')[2]
+
+					restaurant = session.query(Restaurant).filter(Restaurant.id == restaurant_id).one()
+
+					session.delete(restaurant)
+					session.commit()
+
+					output = "<html><head>"
+					output += "<meta http-equiv = 'refresh' content=0;url='/restaurants'> "
+					output += "</head></html>"
+
+					self.wfile.write(output)
 		except:
 			pass
 
