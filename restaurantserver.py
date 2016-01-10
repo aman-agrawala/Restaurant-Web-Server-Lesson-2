@@ -48,6 +48,21 @@ class Handler(BaseHTTPRequestHandler):
 
 				return 
 
+			elif self.path.endswith("/edit"):
+				self.send_response(200)
+				self.send_header('Content-type','text/html')
+				self.end_headers()
+
+				restaurant_id = self.path.split('/')[2]
+				restaurant = session.query(Restaurant).filter(Restaurant.id == restaurant_id).one()
+
+				output = "<html><body>"
+				output += "<h2>%s</h2>" % restaurant.name
+				output += "<form method = 'POST' enctype='multipart/form-data' action='/restaurant/%s/updated'><input name = 'name' type = 'text' placeholder = '%s'><input type = 'submit' value = 'Rename'></form>" % (restaurant.id, restaurant.name)
+				output += "</body></html>"
+				
+				self.wfile.write(output)
+
 		except IOError:
 			self.send_error(404, "File Not Found: %s" % self.path)
 
