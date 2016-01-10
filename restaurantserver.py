@@ -35,9 +35,35 @@ class Handler(BaseHTTPRequestHandler):
 				return # exit if statement
 		except IOError:
 			self.send_error(404, "File Not Found: %s" % self.path)
-		
 
 
+	def do_POST(self):
+		try:
+			elf.send_response(301)
+			self.end_headers()
+
+			ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
+
+			if ctype == 'multipart/form-data':
+				
+				if self.path.endswith('restaurants/create'):
+
+					fields = cgi.parse_multipart(self.rfile,pdict)
+
+					messagecontent = fields.get('message')
+
+					newRestaurant = Restaurant(name = '%s' % messagecontent[0])
+					session.add(newRestaurant)
+					session.commit()
+
+					output = '<html><body>'
+					output += 'Restaurant has been added to the database! Please go back to '
+					output += '<a href = /restaurants>Restaurants List</a>'
+					output += "</html></body>"
+
+					self.wfile.write(output)
+		except:
+			pass
 
 def main():
 	try:
